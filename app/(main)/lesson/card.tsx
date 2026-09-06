@@ -3,97 +3,16 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useCallback } from "react";
 import { useAudio, useKey } from "react-use";
+import { Check, Volume2, X } from "lucide-react";
 
-type Props = {
-  id: number;
-  imageSrc: string | null;
-  audioSrc: string | null;
-  text: string;
-  shortcut: string;
-  selected?: boolean;
-  onClick: () => void;
-  disabled?: boolean;
-  status?: "correct" | "wrong" | "none";
-  type: (typeof challenges.$inferSelect)["type"];
-};
+type Props = { id: number; imageSrc: string | null; audioSrc: string | null; text: string; shortcut: string; selected?: boolean; onClick: () => void; disabled?: boolean; status?: "correct" | "wrong" | "none"; type: (typeof challenges.$inferSelect)["type"] };
 
-export const Card = ({
-  id,
-  imageSrc,
-  audioSrc,
-  text,
-  shortcut,
-  selected,
-  onClick,
-  disabled,
-  status,
-  type,
-}: Props) => {
-  const [audio, _, controls] = useAudio({ src: audioSrc || "" });
-
-  const handleClick = useCallback(() => {
-    if (disabled) return;
-
-    controls.play();
-    onClick();
-  }, [disabled, onClick, controls]);
-
+export const Card = ({ imageSrc, audioSrc, text, shortcut, selected, onClick, disabled, status }: Props) => {
+  const [audio, , controls] = useAudio({ src: audioSrc || "" });
+  const handleClick = useCallback(() => { if (disabled) return; if (audioSrc) controls.play(); onClick(); }, [audioSrc, controls, disabled, onClick]);
   useKey(shortcut, handleClick, {}, [handleClick]);
-
-  return (
-    <div
-      onClick={handleClick}
-      className={cn(
-        "h-full border-2 rounded-xl border-b-4 hover:bg-black/5 p-4 lg:p-6 cursor-pointer active:border-b-2",
-        selected && "border-sky-300 bg-sky-100 hover:bg-sky-100",
-        selected &&
-          status === "correct" &&
-          "border-green-300 bg-green-100 hover:bg-green-100",
-        selected &&
-          status === "wrong" &&
-          "border-rose-300 bg-rose-100 hover:bg-rose-100",
-        disabled && "pointer-events-none hover:bg-white",
-        type === "ASSIST" && "lg:p-3 w-full"
-      )}
-    >
-      {audio}
-      {imageSrc && (
-        <div className="relative aspect-square mb-4 max-h-[80px] lg:max-h-[150px] w-full">
-          <Image src={imageSrc} fill alt={text} />
-        </div>
-      )}
-      <div
-        className={cn(
-          "flex items-center justify-between",
-          type === "ASSIST" && "flex-row-reverse"
-        )}
-      >
-        {type === "ASSIST" && <div />}
-        <p
-          className={cn(
-            "text-neutral-600 text-sm lg:text-base",
-            selected && "text-sky-500",
-            selected && status === "correct" && "text-green-500",
-            selected && status === "wrong" && "text-rose-500"
-          )}
-        >
-          {text}
-        </p>
-        <div
-          className={cn(
-            "lg:w-[30px] lg:h-[30px] w-[20px] h-[20px] border-2 flex items-center justify-center rounded-lg text-neutral-400 lg:text-[15px] text-xs font-semibold",
-            selected && "border-sky-300 text-sky-500",
-            selected &&
-              status === "correct" &&
-              "border-green-500 text-green-500",
-            selected &&
-              status === "wrong" &&
-              "border-rose-500 text-rose-500"
-          )}
-        >
-          {shortcut}
-        </div>
-      </div>
-    </div>
-  );
+  return <button type="button" onClick={handleClick} disabled={disabled} className={cn("focus-ring group flex min-h-[76px] w-full items-center gap-4 rounded-[1.25rem] border bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-[#18344f]/30 hover:shadow-md", selected && status === "none" && "border-[#2f9d92] bg-[#effaf8] ring-1 ring-[#2f9d92]", selected && status === "correct" && "border-[#2f9d92] bg-[#e8f6f3] ring-1 ring-[#2f9d92]", selected && status === "wrong" && "border-[#cf4050] bg-[#fff0f2] ring-1 ring-[#cf4050]")}>
+    {audio}{imageSrc && <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-[#f4efe7]"><Image src={imageSrc} fill alt="" className="object-contain p-1"/></span>}
+    <span className="flex-1 text-[15px] font-extrabold leading-6 text-[#18344f]">{text}</span>{audioSrc && <Volume2 className="h-4 w-4 text-[#2f9d92]"/>}<span className={cn("grid h-8 w-8 shrink-0 place-items-center rounded-full border bg-[#faf7f1] text-[11px] font-black text-[#89949b]", selected && status === "none" && "border-[#2f9d92] bg-[#2f9d92] text-white", selected && status === "correct" && "border-[#2f9d92] bg-[#2f9d92] text-white", selected && status === "wrong" && "border-[#cf4050] bg-[#cf4050] text-white")}>{selected && status === "correct" ? <Check className="h-4 w-4"/> : selected && status === "wrong" ? <X className="h-4 w-4"/> : shortcut}</span>
+  </button>;
 };

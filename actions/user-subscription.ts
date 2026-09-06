@@ -3,12 +3,12 @@
 import { getUserSubscription } from "@/db/queries";
 import { stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils";
-import { auth, currentUser } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 const returnUrl = absoluteUrl("/shop");
 
 export const createStripeUrl = async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
   const user = await currentUser();
 
   if (!userId || !user) {
@@ -36,8 +36,8 @@ export const createStripeUrl = async () => {
         price_data: {
           currency: "USD",
           product_data: {
-            name: "Meowlearn Pro",
-            description: "Unlimited Hearts",
+            name: "MeowLearn Studio",
+            description: "Năng lượng học không giới hạn",
           },
           unit_amount: 2000,
           recurring: {

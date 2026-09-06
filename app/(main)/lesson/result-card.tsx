@@ -1,50 +1,7 @@
-import { cn } from "@/lib/utils";
-import Image from "next/image";
+import { BatteryMedium, Coins } from "lucide-react";
 
-type Props = {
-  value: number;
-  variant: "points" | "hearts";
-};
-
-const ResultCard = ({ value, variant }: Props) => {
-  const imageSrc =
-    variant === "hearts" ? "/heart.svg" : "/points.svg";
-
-  return (
-    <div
-      className={cn(
-        "rounded-xl border-2 w-full",
-        variant === "points" && "bg-orange-400 border-orange-400",
-        variant === "hearts" && "bg-rose-500 border-rose-500"
-      )}
-    >
-      <div
-        className={cn(
-          "p-1.5 text-white rounded-t-xl font-bold text-center uppercase text-xs",
-          variant === "hearts" && "bg-red-500",
-          variant === "points" && "bg-orange-400"
-        )}
-      >
-        {variant === "hearts" ? "Hearts Left" : "Total XP"}
-      </div>
-      <div
-        className={cn(
-          "rounded-2xl bg-white items-center flex justify-center p-6 font-bold text-lg",
-          variant === "hearts" && "text-rose-500",
-          variant === "points" && "text-orange-400"
-        )}
-      >
-        <Image
-          alt="Icon"
-          src={imageSrc}
-          width={30}
-          height={30}
-          className="mr-1.5"
-        />
-        {value}
-      </div>
-    </div>
-  );
-};
-
-export default ResultCard;
+export default function ResultCard({ value, variant }: { value: number; variant: "points" | "hearts" }) {
+  const points = variant === "points";
+  const Icon = points ? Coins : BatteryMedium;
+  return <div className="paper-card flex flex-1 items-center gap-4 p-5 text-left"><span className={points ? "grid h-11 w-11 place-items-center rounded-2xl bg-[#fff6dc] text-[#aa7612]" : "grid h-11 w-11 place-items-center rounded-2xl bg-[#fff0ec] text-[#d84b31]"}><Icon className="h-5 w-5"/></span><div><p className="text-2xl font-black text-[#18344f]">{value}</p><p className="text-[10px] font-black uppercase tracking-wider text-[#8c969c]">{points ? "Điểm nhận được" : "Năng lượng còn lại"}</p></div></div>;
+}

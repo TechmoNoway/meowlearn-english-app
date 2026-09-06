@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,38 +8,25 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import Image from "next/image";
 import { Button } from "../ui/button";
 import { usePracticeModal } from "@/app/store/use-practice-modal";
+import { RotateCcw } from "lucide-react";
 
 export const PracticeModal = () => {
-  const [isClient, setIsClient] = useState(false);
   const { isOpen, close } = usePracticeModal();
-
-  useEffect(() => setIsClient(true), []);
-
-  if (!isClient) {
-    return null;
-  }
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <div className="flex items-center w-full justify-center mb-5">
-            <Image
-              src="/heart.svg"
-              alt="Heart"
-              height={100}
-              width={100}
-            />
+            <span className="grid h-16 w-16 place-items-center rounded-3xl bg-[#e8f6f3] text-[#2f9d92]"><RotateCcw className="h-7 w-7" /></span>
           </div>
           <DialogTitle className="text-center font-bold text-2xl">
-            Practice lesson
+            Ôn lại bài học
           </DialogTitle>
           <DialogDescription className="text-center text-base">
-            Use practice lessons to regain hearts and points. You can
-            not loose hearts or points in practice lessons.
+            Khi ôn lại, bạn có thể nhận thêm điểm và hồi năng lượng. Trả lời sai sẽ không làm mất năng lượng.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mb-4">
@@ -51,7 +37,7 @@ export const PracticeModal = () => {
               size="lg"
               onClick={close}
             >
-              I understand
+              Bắt đầu ôn
             </Button>
           </div>
         </DialogFooter>

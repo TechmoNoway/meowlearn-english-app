@@ -1,32 +1,5 @@
-type Props = {
-  question: string;
-};
+import { MessageCircleMore } from "lucide-react";
 
-import Image from "next/image";
-import React from "react";
-
-export const QuestionBubble = ({ question }: Props) => {
-  return (
-    <div className="flex items-center gap-x-4 mb-6">
-      <Image
-        src="/mascot.svg"
-        alt="qs"
-        height={60}
-        width={60}
-        className="hidden lg:block"
-      />
-      <Image
-        src="/mascot.svg"
-        alt="qs"
-        height={40}
-        width={40}
-        className="hidden lg:hidden"
-      />
-      <div className="relative py-2 px-4 border-2 rounded-xl text-sm lg:text-base">
-        {question}
-        <div className="absolute -left-3 top-1/2 w-0 h-0 border-x-8 border-x-transparent border-t-8 transform -translate-y-1/2 rotate-90"></div>
-        
-      </div>
-    </div>
-  );
-};
+export const QuestionBubble = ({ question }: { question: string }) => (
+  <div className="mb-6 flex items-start gap-3 rounded-[1.4rem] bg-[#18344f] p-5 text-white shadow-lg"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/10 text-[#8edbd2]"><MessageCircleMore className="h-5 w-5"/></span><div><p className="text-[10px] font-black uppercase tracking-[.16em] text-white/40">Câu cần hiểu</p><p className="mt-2 text-lg font-black leading-snug">{question}</p></div></div>
+);

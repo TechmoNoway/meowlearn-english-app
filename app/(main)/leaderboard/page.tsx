@@ -1,85 +1,13 @@
-import { StickyWrapper } from "@/components/sticky-wrapper";
-import { UserProgress } from "@/components/user-progress";
-import {
-  getTopTenUsers,
-  getUserProgress,
-  getUserSubscription,
-} from "@/db/queries";
+import { getTopTenUsers, getUserProgress, getUserSubscription } from "@/db/queries";
 import { redirect } from "next/navigation";
-import { FeedWrapper } from "@/components/feed-wrapper";
-import Image from "next/image";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Promo } from "@/components/promo";
-import { Quests } from "@/components/quests";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BarChart3, Medal, TrendingUp } from "lucide-react";
 
 const LeaderboardPage = async () => {
-  const userProgressData = getUserProgress();
-  const userSubscriptionData = getUserSubscription();
-  const leaderBoardData = getTopTenUsers();
-
-  const [userProgress, userSubscription, leaderboard] =
-    await Promise.all([
-      userProgressData,
-      userSubscriptionData,
-      leaderBoardData,
-    ]);
-
-  if (!userProgress || !userProgress.activeCourse) {
-    redirect("/courses");
-  }
-
-  const isPro = !!userSubscription?.isActive;
-
-  return (
-    <div className="flex flex-row-reverse gap-[48px] px-6">
-      <StickyWrapper>
-        <UserProgress
-          activeCourse={userProgress.activeCourse}
-          hearts={userProgress.hearts}
-          points={userProgress.points}
-          hasActiveSubscription={isPro}
-        />
-        {!isPro && <Promo />}
-        <Quests points={userProgress.points} />
-      </StickyWrapper>
-      <FeedWrapper>
-        <div className="w-full flex flex-col items-center">
-          <Image
-            src="/leaderboard.svg"
-            alt="Leaderboard"
-            height={90}
-            width={90}
-          />
-
-          <h1 className="text-center font-bold text-neutral-800 text-2xl my-6">
-            Leaderboard
-          </h1>
-          <p className="text-muted-foreground text-center text-lg mb-6">
-            See where you stand amond other learners in the community.
-          </p>
-          <Separator className="mb-4 h-0.5 rounded-full" />
-          {leaderboard.map((userProgress, index) => (
-            <div
-              key={userProgress.userId}
-              className="flex items-center w-full p-2 px-4 rounded-xl hover:bg-gray-200/50"
-            >
-              <p className="font-bold mr-4">{index + 1}</p>
-              <Avatar className="border h-12 w-12 ml-3 mr-6">
-                <AvatarImage src={userProgress.userImageSrc} />
-              </Avatar>
-              <p className="font-bold text-neutral-800 flex-1">
-                {userProgress.userName}
-              </p>
-              <p className="text-muted-foreground">
-                {userProgress.points} XP
-              </p>
-            </div>
-          ))}
-        </div>
-      </FeedWrapper>
-    </div>
-  );
+  const [userProgress, , leaderboard] = await Promise.all([getUserProgress(), getUserSubscription(), getTopTenUsers()]);
+  if (!userProgress?.activeCourse) redirect("/courses");
+  const maxPoints = Math.max(...leaderboard.map((user) => user.points), 1);
+  return <div className="mx-auto max-w-[900px]"><div className="mb-9 grid gap-7 md:grid-cols-[1fr_auto] md:items-end"><div><p className="eyebrow">Nhịp học cộng đồng</p><h1 className="display-title mt-3">Tiến độ, không phải cuộc đua</h1><p className="mt-4 max-w-2xl leading-7 text-[#6c7f8e]">Một góc nhìn nhẹ nhàng để thấy mọi người đang duy trì thói quen ra sao. Điểm số chỉ là dấu mốc, không phải thước đo năng lực.</p></div><span className="grid h-20 w-20 place-items-center rounded-[1.8rem] bg-[#fff0ec] text-[#ff6b4a]"><BarChart3 className="h-8 w-8"/></span></div>
+  <div className="paper-card overflow-hidden"><div className="grid grid-cols-[44px_1fr_auto] items-center gap-3 border-b bg-[#f7f1e8] px-5 py-4 text-[10px] font-black uppercase tracking-[.15em] text-[#90979a]"><span>#</span><span>Học viên</span><span>Điểm học</span></div>{leaderboard.length === 0 ? <div className="p-10 text-center text-sm text-[#718293]">Chưa có dữ liệu tiến độ. Hãy hoàn thành bài đầu tiên để bắt đầu.</div> : leaderboard.map((user,index) => <div key={user.userId} className="grid grid-cols-[44px_1fr_auto] items-center gap-3 border-b px-5 py-4 last:border-0"><span className="font-black text-[#929895]">{index === 0 ? <Medal className="h-5 w-5 text-[#e4a824]"/> : String(index+1).padStart(2,"0")}</span><div className="flex min-w-0 items-center gap-3"><Avatar className="h-11 w-11 border-2 border-white shadow"><AvatarImage src={user.userImageSrc}/><AvatarFallback>{user.userName.slice(0,1)}</AvatarFallback></Avatar><div className="min-w-0 flex-1"><p className="truncate font-black text-[#18344f]">{user.userName}</p><div className="mt-2 h-1 max-w-[280px] overflow-hidden rounded-full bg-[#ece5db]"><div className="h-full rounded-full bg-[#2f9d92]" style={{width:`${(user.points/maxPoints)*100}%`}}/></div></div></div><span className="flex items-center gap-1.5 rounded-full bg-[#fff6dc] px-3 py-1.5 text-xs font-black text-[#a16f11]"><TrendingUp className="h-3.5 w-3.5"/>{user.points}</span></div>)}</div></div>;
 };
-
 export default LeaderboardPage;

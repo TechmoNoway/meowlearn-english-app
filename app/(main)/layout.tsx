@@ -1,22 +1,17 @@
 import { MobileHeader } from "@/components/mobile-header";
 import { Sidebar } from "@/components/sidebar";
+import { auth } from "@clerk/nextjs/server";
 
-type Props = {
-  children: React.ReactNode;
-};
+const MainLayout = async ({ children }: { children: React.ReactNode }) => {
+  await auth.protect();
 
-const MainLayout = ({ children }: Props) => {
-  return (
-    <>
-      <MobileHeader />
-      <Sidebar className="hidden lg:flex" />
-      <main className="lg:pl-[256px] h-full pt-[50px]lg:pt-0">
-        <div className="h-full max-w-[1056px] pt-6 mx-auto">
-          {children}
-        </div>
-      </main>
-    </>
-  );
+  return <>
+    <MobileHeader />
+    <Sidebar className="hidden lg:flex" />
+    <main className="min-h-screen px-4 pb-28 pt-24 sm:px-6 lg:pl-[304px] lg:pr-8 lg:pt-8">
+      <div className="mx-auto w-full max-w-[1180px]">{children}</div>
+    </main>
+  </>;
 };
 
 export default MainLayout;

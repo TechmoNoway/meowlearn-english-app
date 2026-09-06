@@ -1,6 +1,6 @@
 import { cache } from "react";
 import db from "@/db/drizzle";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import {
   challengeProgress,
@@ -8,10 +8,10 @@ import {
   userProgress,
   userSubscription,
 } from "@/db/schema";
-import { units, lessons, challenges } from "./schema";
+import { units, lessons } from "./schema";
 
 export const getUserProgress = cache(async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return null;
@@ -28,7 +28,7 @@ export const getUserProgress = cache(async () => {
 });
 
 export const getUnits = cache(async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
   const userProgress = await getUserProgress();
 
   if (!userId || !userProgress?.activeCourseId) {
@@ -157,7 +157,7 @@ export const getCourseProgress = cache(async () => {
 });
 
 export const getLesson = cache(async (id?: number) => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return null;
@@ -220,6 +220,10 @@ export const getLessonPercentage = cache(async () => {
     return 0;
   }
 
+  if (lesson.challenges.length === 0) {
+    return 0;
+  }
+
   const completedChallenges = lesson.challenges.filter(
     (challenge) => challenge.completed
   );
@@ -233,7 +237,7 @@ export const getLessonPercentage = cache(async () => {
 
 const DAY_IN_MS = 86_400_000;
 export const getUserSubscription = cache(async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) return null;
 
@@ -245,7 +249,7 @@ export const getUserSubscription = cache(async () => {
 
   const isActive =
     data.stripePriceId &&
-    data.stripeCurrentPeriodEnd?.getTime()! + DAY_IN_MS > Date.now();
+    data.stripeCurrentPeriodEnd.getTime() + DAY_IN_MS > Date.now();
 
   return {
     ...data,
@@ -254,7 +258,7 @@ export const getUserSubscription = cache(async () => {
 });
 
 export const getTopTenUsers = cache(async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return [];

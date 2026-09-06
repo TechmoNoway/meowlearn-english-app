@@ -1,118 +1,17 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Check, Crown, Star } from "lucide-react";
+import { ArrowRight, Check, LockKeyhole, Play } from "lucide-react";
 import Link from "next/link";
-import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 
-type Props = {
-  id: number;
-  index: number;
-  totalCount: number;
-  locked?: boolean;
-  current?: boolean;
-  percentage: number;
-};
+type Props = { id: number; index: number; title: string; locked?: boolean; current?: boolean; percentage: number };
 
-export const LessonButton = ({
-  id,
-  index,
-  totalCount,
-  locked,
-  current,
-  percentage,
-}: Props) => {
-  const cycleLength = 8;
-  const cycleIndex = index % cycleLength;
-
-  let indentationLevel;
-
-  if (cycleIndex <= 2) {
-    indentationLevel = cycleIndex;
-  } else if (cycleIndex <= 4) {
-    indentationLevel = 4 - cycleIndex;
-  } else if (cycleIndex <= 6) {
-    indentationLevel = 4 - cycleIndex;
-  } else {
-    indentationLevel = cycleIndex - 8;
-  }
-
-  const rightPosition = indentationLevel * 40;
-
-  const isFirst = index === 0;
-  const isLast = index === totalCount;
-  const isCompleted = !current && !locked;
-
-  const Icon = isCompleted ? Check : isLast ? Crown : Star;
-
-  const href = isCompleted ? `/lesson/${id}` : "/lesson";
-
+export const LessonButton = ({ id, index, title, locked, current, percentage }: Props) => {
+  const completed = !current && !locked;
   return (
-    <Link
-      href={href}
-      aria-disabled={locked}
-      style={{ pointerEvents: locked ? "none" : "auto" }}
-    >
-      <div
-        className="relative"
-        style={{
-          right: `${rightPosition}px`,
-          marginTop: isFirst && !isCompleted ? 64 : 24,
-        }}
-      >
-        {current ? (
-          <div className="h-[102px] w-[102px] relative">
-            <div className="absolute -top-6 left-2.5 px-3 py-2.5 border-2 font-bold uppercase text-green-500 bg-white rounded-xl animate-bounce tracking-wide z-10">
-              Start
-              <div className="absolute left-1/2 -bottom-2 w-0 h-0 border-x-8 border-x-transparent border-t-8 transform -translate-x-1/2" />
-            </div>
-            <CircularProgressbarWithChildren
-              value={Number.isNaN(percentage) ? 0 : percentage}
-              styles={{
-                path: {
-                  stroke: "#4ade80",
-                },
-                trail: {
-                  stroke: "#e5e7eb",
-                },
-              }}
-            >
-              <Button
-                size="rounded"
-                variant={locked ? "locked" : "secondary"}
-                className="h-[70px] w-[70px] border-b-8"
-              >
-                <Icon
-                  className={cn(
-                    "h-10 w-10",
-                    locked
-                      ? "fill-neutral-400 text-neutral-400 stroke-neutral-400"
-                      : "fill-primary-foreground text-primary-foreground",
-                    isCompleted && "fill-none stroke-[4]"
-                  )}
-                />
-              </Button>
-            </CircularProgressbarWithChildren>
-          </div>
-        ) : (
-          <Button
-            size="rounded"
-            variant={locked ? "locked" : "secondary"}
-            className="h-[70px] w-[70px] border-b-8"
-          >
-            <Icon
-              className={cn(
-                "h-10 w-10",
-                locked
-                  ? "fill-neutral-400 text-neutral-400 stroke-neutral-400"
-                  : "fill-primary-foreground text-primary-foreground",
-                isCompleted && "fill-none stroke-[4]"
-              )}
-            />
-          </Button>
-        )}
-      </div>
+    <Link href={completed ? `/lesson/${id}` : "/lesson"} aria-disabled={locked} tabIndex={locked ? -1 : 0} className={cn("focus-ring group relative flex min-h-[150px] flex-col justify-between rounded-[1.4rem] border bg-white p-5 shadow-[0_10px_30px_rgba(24,52,79,.05)] transition", !locked && "hover:-translate-y-1 hover:border-[#18344f]/25 hover:shadow-[0_18px_36px_rgba(24,52,79,.10)]", current && "border-[#ff6b4a]/40 bg-[#fff8f4]", locked && "pointer-events-none bg-[#f4efe7] opacity-65")}>
+      <div className="flex items-start justify-between"><span className="text-[10px] font-black uppercase tracking-[.16em] text-[#9a9b97]">Bài {String(index + 1).padStart(2,"0")}</span><span className={cn("grid h-9 w-9 place-items-center rounded-full", completed ? "bg-[#e8f6f3] text-[#2f9d92]" : current ? "bg-[#ff6b4a] text-white" : "bg-[#e8e3da] text-[#999995]")}>{completed ? <Check className="h-4 w-4" strokeWidth={3}/> : current ? <Play className="h-4 w-4 fill-current"/> : <LockKeyhole className="h-4 w-4"/>}</span></div>
+      <div><h3 className="line-clamp-2 text-[17px] font-black leading-snug tracking-[-.02em] text-[#18344f]">{title}</h3>{current && <div className="mt-4"><div className="h-1.5 overflow-hidden rounded-full bg-[#f0ded8]"><div className="h-full rounded-full bg-[#ff6b4a]" style={{width: `${Math.min(Number.isNaN(percentage) ? 0 : percentage,100)}%`}} /></div><p className="mt-2 flex items-center justify-between text-[10px] font-bold text-[#aa7165]"><span>Đang học</span><ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1"/></p></div>}{completed && <p className="mt-3 text-[11px] font-bold text-[#2f9d92]">Ôn lại bài này</p>}{locked && <p className="mt-3 text-[11px] font-bold text-[#94948f]">Hoàn thành bài trước để mở</p>}</div>
     </Link>
   );
 };

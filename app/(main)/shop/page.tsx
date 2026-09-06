@@ -1,57 +1,11 @@
-import { StickyWrapper } from "@/components/sticky-wrapper";
-import { UserProgress } from "@/components/user-progress";
 import { getUserProgress, getUserSubscription } from "@/db/queries";
 import { redirect } from "next/navigation";
-import { FeedWrapper } from "@/components/feed-wrapper";
-import Image from "next/image";
 import { Items } from "./items";
-import { Quests } from "@/components/quests";
+import { BatteryCharging } from "lucide-react";
 
 const ShopPage = async () => {
-  const userProgressData = getUserProgress();
-  const userSubscriptionData = getUserSubscription();
-
-  const [userProgress, userSubscription] = await Promise.all([
-    userProgressData,
-    userSubscriptionData,
-  ]);
-
-  if (!userProgress || !userProgress.activeCourse) {
-    redirect("/courses");
-  }
-
-  const isPro = !!userSubscription?.isActive;
-
-  return (
-    <div className="flex flex-row-reverse gap-[48px] px-6">
-      <StickyWrapper>
-        <UserProgress
-          activeCourse={userProgress.activeCourse}
-          hearts={userProgress.hearts}
-          points={userProgress.points}
-          hasActiveSubscription={isPro}
-        />
-        <Quests points={userProgress.points} />
-      </StickyWrapper>
-      <FeedWrapper>
-        <div className="w-full flex flex-col items-center">
-          <Image src="/shop.svg" alt="Shop" height={90} width={90} />
-
-          <h1 className="text-center font-bold text-neutral-800 text-2xl my-6">
-            Shop
-          </h1>
-          <p className="text-muted-foreground text-center text-lg mb-6">
-            Spend your points on cool stuff.
-          </p>
-          <Items
-            hearts={userProgress.hearts}
-            points={userProgress.points}
-            hasActiveSubscription={isPro}
-          />
-        </div>
-      </FeedWrapper>
-    </div>
-  );
+  const [userProgress,userSubscription] = await Promise.all([getUserProgress(),getUserSubscription()]);
+  if (!userProgress?.activeCourse) redirect("/courses");
+  return <div className="mx-auto max-w-[850px]"><div className="mb-9 flex items-end justify-between gap-6"><div><p className="eyebrow">Kho hỗ trợ</p><h1 className="display-title mt-3">Giữ nhịp học liền mạch</h1><p className="mt-4 max-w-2xl leading-7 text-[#6c7f8e]">Dùng điểm học để nạp năng lượng hoặc mở chế độ học không giới hạn.</p></div><span className="hidden h-20 w-20 shrink-0 place-items-center rounded-[1.8rem] bg-[#18344f] text-[#f5c451] sm:grid"><BatteryCharging className="h-8 w-8"/></span></div><Items hearts={userProgress.hearts} points={userProgress.points} hasActiveSubscription={!!userSubscription?.isActive}/></div>;
 };
-
 export default ShopPage;

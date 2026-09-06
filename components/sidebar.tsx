@@ -1,61 +1,32 @@
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "./sidebar-item";
 import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
-import { Loader } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
+import { BrandMark } from "./brand-mark";
 
-type Props = {
-  className?: string;
-};
+type Props = { className?: string };
 
-export const Sidebar = ({ className }: Props) => {
-  return (
-    <div
-      className={cn(
-        "flex h-full lg:w-[256px] lg:fixed left-0 top-0 px-4 border-r-2 flex-col",
-        className
-      )}
-    >
-      <Link href="/">
-        <div className="pt-8 pl-4 pb-6 flex items-center gap-x-3">
-          <Image
-            src="/meowlearn.png"
-            height={40}
-            width={40}
-            alt="Mascot"
-          />
-          <h1 className="text-2xl font-extrabold tracking-wide">
-            Meowlearn
-          </h1>
-        </div>
-      </Link>
-      <div className="flex flex-col gap-y-2 flex-1">
-        <SidebarItem
-          label="Learn"
-          href="/learn"
-          iconSrc="/learn.svg"
-        />
-        <SidebarItem
-          label="Leaderboard"
-          href="/leaderboard"
-          iconSrc="/leaderboard.svg"
-        />
-        <SidebarItem
-          label="Quests"
-          href="/quests"
-          iconSrc="/quests.svg"
-        />
-        <SidebarItem label="Shop" href="/shop" iconSrc="/shop.svg" />
-      </div>
-      <div className="p-4">
-        <ClerkLoading>
-          <Loader className="h-5 w-5 text-muted-foreground animate-spin" />
-        </ClerkLoading>
-        <ClerkLoaded>
-          <UserButton afterSignOutUrl="/" />
-        </ClerkLoaded>
-      </div>
+export const navItems = [
+  { label: "Studio", caption: "Lộ trình của bạn", href: "/learn", icon: "learn" },
+  { label: "Khám phá", caption: "Chọn hướng học", href: "/courses", icon: "explore" },
+  { label: "Tiến độ", caption: "Nhịp học cộng đồng", href: "/leaderboard", icon: "progress" },
+  { label: "Mục tiêu", caption: "Cột mốc cá nhân", href: "/quests", icon: "goals" },
+  { label: "Kho hỗ trợ", caption: "Năng lượng & gói học", href: "/shop", icon: "shop" },
+] as const;
+
+export const Sidebar = ({ className }: Props) => (
+  <aside className={cn("fixed inset-y-0 left-0 z-40 flex w-[280px] flex-col bg-[#18344f] px-5 py-6 text-white", className)}>
+    <Link href="/" className="mb-9 px-2"><BrandMark inverted /></Link>
+    <div className="mb-5 rounded-[1.4rem] border border-white/10 bg-white/[.06] p-4">
+      <p className="text-[10px] font-black uppercase tracking-[.18em] text-[#8edbd2]">Không gian học</p>
+      <p className="mt-2 text-lg font-black leading-tight">English ↔ Tiếng Việt</p>
+      <p className="mt-2 text-xs leading-5 text-white/45">Một cặp ngôn ngữ, học đến nơi.</p>
     </div>
-  );
-};
+    <nav className="flex flex-1 flex-col gap-1.5">{navItems.map((item) => <SidebarItem key={item.href} {...item} />)}</nav>
+    <div className="flex items-center gap-3 border-t border-white/10 px-2 pt-5">
+      <ClerkLoading><LoaderCircle className="h-5 w-5 animate-spin text-white/50" /></ClerkLoading>
+      <ClerkLoaded><UserButton /><span className="text-xs font-bold text-white/50">Tài khoản học viên</span></ClerkLoaded>
+    </div>
+  </aside>
+);

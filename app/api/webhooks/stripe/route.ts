@@ -8,7 +8,11 @@ import Stripe from "stripe";
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = headers().get("Stripe-Signature") as string;
+  const signature = (await headers()).get("stripe-signature");
+
+  if (!signature) {
+    return new NextResponse("Missing Stripe signature", { status: 400 });
+  }
 
   let event: Stripe.Event;
 
@@ -18,18 +22,19 @@ export async function POST(req: Request) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (error: any) {
-    return new NextResponse(`Webhook error: ${error.message}`, {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Invalid webhook payload";
+    return new NextResponse(`Webhook error: ${message}`, {
       status: 400,
     });
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
-
   if (event.type === "checkout.session.completed") {
+    const session = event.data.object as Stripe.Checkout.Session;
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
+    const subscriptionItem = subscription.items.data[0];
 
     if (!session?.metadata?.userId) {
       return new NextResponse("User ID is required", { status: 400 });
@@ -39,24 +44,32 @@ export async function POST(req: Request) {
       userId: session.metadata.userId,
       stripeSubscriptionId: subscription.id,
       stripeCustomerId: subscription.customer as string,
-      stripePriceId: subscription.items.data[0].price.id,
+      stripePriceId: subscriptionItem.price.id,
       stripeCurrentPeriodEnd: new Date(
-        subscription.current_period_end * 1000
+        subscriptionItem.current_period_end * 1000
       ),
     });
   }
 
   if (event.type === "invoice.payment_succeeded") {
+    const invoice = event.data.object as Stripe.Invoice;
+    const subscriptionRef = invoice.parent?.subscription_details?.subscription;
+
+    if (!subscriptionRef) {
+      return new NextResponse("Invoice has no subscription", { status: 400 });
+    }
+
     const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
+      typeof subscriptionRef === "string" ? subscriptionRef : subscriptionRef.id
     );
+    const subscriptionItem = subscription.items.data[0];
 
     await db
       .update(userSubscription)
       .set({
-        stripePriceId: subscription.items.data[0].price.id,
+        stripePriceId: subscriptionItem.price.id,
         stripeCurrentPeriodEnd: new Date(
-          subscription.current_period_end * 1000
+          subscriptionItem.current_period_end * 1000
         ),
       })
       .where(

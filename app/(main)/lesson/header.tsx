@@ -1,41 +1,9 @@
 import { useExitModal } from "@/app/store/use-exit-modal";
-import { Progress } from "@/components/ui/progress";
-import { Infinity, X } from "lucide-react";
-import Image from "next/image";
-type Props = {
-  hearts: number;
-  percentage: number;
-  hasActiveSubscription: boolean;
-};
+import { BatteryMedium, Infinity, X } from "lucide-react";
 
-export const Header = ({
-  hearts,
-  percentage,
-  hasActiveSubscription,
-}: Props) => {
+type Props = { hearts: number; percentage: number; hasActiveSubscription: boolean; lessonTitle: string };
+
+export const Header = ({ hearts, percentage, hasActiveSubscription, lessonTitle }: Props) => {
   const { open } = useExitModal();
-
-  return (
-    <header className="lg:pt-[50px] pt-[20px] px-10 flex gap-x-7 items-center justify-between max-w-[1140px] mx-auto w-full">
-      <X
-        onClick={open}
-        className="text-slate-500 hover:opacity-75 transition cursor-pointer"
-      />
-      <Progress value={percentage} />
-      <div className="text-rose-500 flex items-center font-bold">
-        <Image
-          src="/heart.svg"
-          width={28}
-          height={28}
-          alt="Heart"
-          className="mr-2"
-        />
-        {hasActiveSubscription ? (
-          <Infinity className="h-6 w-6 stroke-[3] shrink-0" />
-        ) : (
-          hearts
-        )}
-      </div>
-    </header>
-  );
+  return <header className="mx-auto w-full max-w-[980px] px-5 pt-5 sm:pt-8"><div className="flex items-center gap-4"><button onClick={open} aria-label="Thoát buổi học" className="focus-ring grid h-10 w-10 shrink-0 place-items-center rounded-full border bg-white text-[#6e7e8a] hover:text-[#18344f]"><X className="h-4 w-4"/></button><div className="min-w-0 flex-1"><div className="mb-2 flex items-center justify-between gap-3 text-[10px] font-black uppercase tracking-[.14em]"><span className="truncate text-[#657889]">{lessonTitle}</span><span className="text-[#ff6b4a]">{Math.round(percentage)}%</span></div><div className="h-2 overflow-hidden rounded-full bg-[#e8dfd2]"><div className="h-full rounded-full bg-[#ff6b4a] transition-all duration-500" style={{width:`${Math.min(percentage,100)}%`}} /></div></div><div className="flex min-w-[48px] items-center justify-end gap-1.5 text-sm font-black text-[#d84b31]"><BatteryMedium className="h-5 w-5"/>{hasActiveSubscription ? <Infinity className="h-4 w-4"/> : hearts}</div></div></header>;
 };

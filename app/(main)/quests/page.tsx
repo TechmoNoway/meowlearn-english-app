@@ -1,88 +1,12 @@
-import { StickyWrapper } from "@/components/sticky-wrapper";
-import { UserProgress } from "@/components/user-progress";
-import {
-  getTopTenUsers,
-  getUserProgress,
-  getUserSubscription,
-} from "@/db/queries";
+import { getUserProgress } from "@/db/queries";
 import { redirect } from "next/navigation";
-import { FeedWrapper } from "@/components/feed-wrapper";
-import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
-import { Promo } from "@/components/promo";
 import { quests } from "@/constants";
+import { Check, Flag, Target } from "lucide-react";
 
 const QuestsPage = async () => {
-  const userProgressData = getUserProgress();
-  const userSubscriptionData = getUserSubscription();
-
-  const [userProgress, userSubscription] = await Promise.all([
-    userProgressData,
-    userSubscriptionData,
-  ]);
-
-  if (!userProgress || !userProgress.activeCourse) {
-    redirect("/courses");
-  }
-
-  const isPro = !!userSubscription?.isActive;
-
-  return (
-    <div className="flex flex-row-reverse gap-[48px] px-6">
-      <StickyWrapper>
-        <UserProgress
-          activeCourse={userProgress.activeCourse}
-          hearts={userProgress.hearts}
-          points={userProgress.points}
-          hasActiveSubscription={isPro}
-        />
-        {!isPro && <Promo />}
-      </StickyWrapper>
-      <FeedWrapper>
-        <div className="w-full flex flex-col items-center">
-          <Image
-            src="/quests.svg"
-            alt="Quests"
-            height={90}
-            width={90}
-          />
-
-          <h1 className="text-center font-bold text-neutral-800 text-2xl my-6">
-            Quests
-          </h1>
-          <p className="text-muted-foreground text-center text-lg mb-6">
-            Complete quests by earning points.
-          </p>
-          <ul className="w-full">
-            {quests.map((quest) => {
-              const progress =
-                (userProgress.points / quest.value) * 100;
-
-              return (
-                <div
-                  className="flex items-center w-full p-4 gap-x-4 border-t-2"
-                  key={quest.title}
-                >
-                  <Image
-                    src="/points.svg"
-                    alt="Point"
-                    width={60}
-                    height={60}
-                  />
-                  <div className="flex flex-col gap-y-2 w-full">
-                    <p className="text-neutral-700 text-xl font-bold">
-                      {quest.title}
-                    </p>
-                    <Progress value={progress} className="h-3" />
-                  </div>
-                </div>
-              );
-            })}
-          </ul>
-        </div>
-      </FeedWrapper>
-    </div>
-  );
+  const userProgress = await getUserProgress();
+  if (!userProgress?.activeCourse) redirect("/courses");
+  return <div className="mx-auto max-w-[850px]"><div className="mb-9"><p className="eyebrow">Cột mốc cá nhân</p><h1 className="display-title mt-3">Mục tiêu học tập</h1><p className="mt-4 max-w-2xl leading-7 text-[#6c7f8e]">Các cột mốc được tính từ tổng điểm bài học. Chọn nhịp phù hợp với bạn — đều đặn quan trọng hơn thật nhanh.</p></div><div className="grid gap-4 sm:grid-cols-2">{quests.map((quest,index) => { const progress = Math.min((userProgress.points/quest.value)*100,100); const complete = progress >= 100; return <div key={quest.title} className="paper-card flex min-h-[190px] flex-col p-5"><div className="flex items-start justify-between"><span className={complete ? "grid h-11 w-11 place-items-center rounded-2xl bg-[#e8f6f3] text-[#2f9d92]" : "grid h-11 w-11 place-items-center rounded-2xl bg-[#fff1ec] text-[#ff6b4a]"}>{complete ? <Check className="h-5 w-5"/> : index === quests.length-1 ? <Flag className="h-5 w-5"/> : <Target className="h-5 w-5"/>}</span><span className="text-[10px] font-black uppercase tracking-wider text-[#979994]">{complete ? "Hoàn tất" : `${Math.round(progress)}%`}</span></div><h2 className="mt-5 font-black text-[#18344f]">{quest.title}</h2><div className="mt-auto pt-5"><Progress value={progress} className="h-2 bg-[#eee7dc]"/><p className="mt-2 text-xs font-bold text-[#839099]">{Math.min(userProgress.points,quest.value)} / {quest.value} điểm</p></div></div>; })}</div></div>;
 };
-
 export default QuestsPage;

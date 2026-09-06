@@ -2,7 +2,6 @@
 
 import { useExitModal } from "@/app/store/use-exit-modal";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,37 +10,25 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import Image from "next/image";
 import { Button } from "../ui/button";
+import { DoorOpen } from "lucide-react";
 
 export const ExitModal = () => {
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
   const { isOpen, close } = useExitModal();
-
-  useEffect(() => setIsClient(true), []);
-
-  if (!isClient) {
-    return null;
-  }
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <div className="flex items-center w-full justify-center mb-5">
-            <Image
-              src="/meowlearn.png"
-              alt="SadLogo"
-              height={80}
-              width={80}
-            />
+            <span className="grid h-16 w-16 place-items-center rounded-3xl bg-[#fff6dc] text-[#aa7612]"><DoorOpen className="h-7 w-7" /></span>
           </div>
           <DialogTitle className="text-center font-bold text-2xl">
-            Wait, don&apos;t go!
+            Dừng buổi học tại đây?
           </DialogTitle>
           <DialogDescription className="text-center text-base">
-            You&apos;re about to leave the lesson. Are you sure?
+            Tiến độ đã hoàn thành vẫn được giữ. Bạn có thể quay lại bất cứ lúc nào.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mb-4">
@@ -52,7 +39,7 @@ export const ExitModal = () => {
               size="lg"
               onClick={close}
             >
-              Keep learning
+              Tiếp tục học
             </Button>
             <Button
               variant="dangerOutline"
@@ -63,7 +50,7 @@ export const ExitModal = () => {
                 router.push("/learn");
               }}
             >
-              End session
+              Rời buổi học
             </Button>
           </div>
         </DialogFooter>

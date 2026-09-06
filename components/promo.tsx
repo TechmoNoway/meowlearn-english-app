@@ -1,29 +1,12 @@
-"use client";
-
-import Image from "next/image";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { Sparkles } from "lucide-react";
 
-export const Promo = () => {
-  return (
-    <div className="border-2 rounded-xl p-4 space-y-4">
-      <div className="space-y-2">
-        <div className="flex items-center gap-x-2">
-          <Image
-            src="/unlimited.svg"
-            alt="Pro"
-            height={26}
-            width={26}
-          />
-          <h3 className="font-bold text-lg">Upgrade to Pro</h3>
-        </div>
-        <p className="text-muted-foreground">
-          Get unlimited hearts and more!
-        </p>
-      </div>
-      <Button variant="super" className="w-full" size="lg" asChild>
-        <Link href="/shop">Upgrade today</Link>
-      </Button>
-    </div>
-  );
-};
+export const Promo = () => (
+  <div className="overflow-hidden rounded-[1.5rem] bg-[#18344f] p-5 text-white shadow-lg">
+    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#ff6b4a]"><Sparkles className="h-5 w-5" /></span>
+    <h3 className="mt-5 text-lg font-black">Học không giới hạn</h3>
+    <p className="mt-2 text-sm leading-6 text-white/55">Mở khóa năng lượng vô hạn và ôn tập không gián đoạn.</p>
+    <Button variant="secondary" className="mt-5 w-full" asChild><Link href="/shop">Xem gói học</Link></Button>
+  </div>
+);

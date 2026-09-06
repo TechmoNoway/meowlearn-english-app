@@ -2,84 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-
-html,
-body,
-root {
-  @apply h-full;
-
-}
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    --background: 42 55% 97%;
+    --foreground: 211 53% 20%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
+    --card-foreground: 211 53% 20%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    --popover-foreground: 211 53% 20%;
+    --primary: 211 53% 20%;
+    --primary-foreground: 42 55% 97%;
+    --secondary: 11 100% 64%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 39 32% 91%;
+    --muted-foreground: 211 17% 45%;
+    --accent: 174 49% 43%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 355 70% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 38 23% 84%;
+    --input: 38 23% 84%;
+    --ring: 11 100% 64%;
+    --radius: 1rem;
+    --ink: #18344f;
+    --paper: #fffaf1;
+    --coral: #ff6b4a;
+    --sea: #2f9d92;
+    --sun: #f5c451;
+    --line: #e6ddcf;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
+  html, body { min-height: 100%; }
+  body {
+    @apply bg-background text-foreground antialiased;
+    background-image:
+      radial-gradient(circle at 8% 4%, rgba(245, 196, 81, 0.14), transparent 22rem),
+      radial-gradient(circle at 96% 16%, rgba(47, 157, 146, 0.1), transparent 28rem);
   }
+  ::selection { color: white; background: var(--coral); }
+  button, a { -webkit-tap-highlight-color: transparent; }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+@layer components {
+  .paper-card { @apply rounded-[1.5rem] border bg-white shadow-[0_12px_40px_rgba(24,52,79,0.06)]; }
+  .eyebrow { @apply text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#2f9d92]; }
+  .display-title { @apply text-balance text-3xl font-black leading-[1.08] tracking-[-0.04em] text-[#18344f] sm:text-4xl; }
+  .fine-grid {
+    background-image:
+      linear-gradient(rgba(24, 52, 79, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(24, 52, 79, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
+  .focus-ring { @apply outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-[#ff6b4a]; }
+}
 
-  body {
-    @apply bg-background text-foreground;
+@keyframes float-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-float-in { animation: float-in 0.55s ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

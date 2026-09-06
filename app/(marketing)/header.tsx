@@ -1,50 +1,23 @@
+import { BrandMark } from "@/components/brand-mark";
 import { Button } from "@/components/ui/button";
-import {
-  ClerkLoaded,
-  ClerkLoading,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
-import { Loader } from "lucide-react";
-import Image from "next/image";
+import { ClerkLoaded, ClerkLoading, Show, SignInButton, UserButton } from "@clerk/nextjs";
+import { LoaderCircle } from "lucide-react";
+import Link from "next/link";
 
-export const Header = () => {
-  return (
-    <header className="h-20 w-full border-b-2 border-slate-200 px-4">
-      <div className="lg:max-w-screen-lg mx-auto flex items-center justify-between h-full ">
-        <div className="pt-8 pl-4 pb-6 flex items-center gap-x-3">
-          <Image
-            src="/meowlearn.png"
-            height={40}
-            width={40}
-            alt="Mascot"
-          />
-          <h1 className="text-2xl font-extrabold tracking-wide">
-            Meowlearn
-          </h1>
-        </div>
-        <ClerkLoading>
-          <Loader className="h-5 w-5 text-muted-foreground animate-spin" />
-        </ClerkLoading>
-        <ClerkLoaded>
-          <SignedIn>
-            <UserButton afterSignOutUrl="/" />
-          </SignedIn>
-          <SignedOut>
-            <SignInButton
-              mode="modal"
-              afterSignInUrl="/learn"
-              afterSignUpUrl="/learn"
-            >
-              <Button size="lg" variant="ghost">
-                Login
-              </Button>
-            </SignInButton>
-          </SignedOut>
-        </ClerkLoaded>
-      </div>
-    </header>
-  );
-};
+export const Header = () => (
+  <header className="sticky top-0 z-50 border-b border-[#e8dfd2]/80 bg-[#fffaf1]/90 px-5 backdrop-blur-xl">
+    <div className="mx-auto flex h-[76px] max-w-6xl items-center justify-between">
+      <Link href="/" aria-label="Trang chủ MeowLearn"><BrandMark /></Link>
+      <nav className="hidden items-center gap-7 text-sm font-bold text-[#607386] md:flex">
+        <a href="#phuong-phap" className="hover:text-[#18344f]">Phương pháp</a>
+        <a href="#lo-trinh" className="hover:text-[#18344f]">Lộ trình</a>
+        <a href="#bai-hoc" className="hover:text-[#18344f]">Bài học mẫu</a>
+      </nav>
+      <ClerkLoading><LoaderCircle className="h-5 w-5 animate-spin text-[#2f9d92]" /></ClerkLoading>
+      <ClerkLoaded>
+        <Show when="signed-in"><div className="flex items-center gap-3"><Button asChild size="sm" variant="primary"><Link href="/learn">Vào studio</Link></Button><UserButton /></div></Show>
+        <Show when="signed-out"><SignInButton mode="modal" fallbackRedirectUrl="/learn"><Button size="sm" variant="ghost">Đăng nhập</Button></SignInButton></Show>
+      </ClerkLoaded>
+    </div>
+  </header>
+);
