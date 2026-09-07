@@ -1,27 +1,29 @@
 # MeowLearn 2.0
 
-MeowLearn là studio học tiếng Anh chuyên sâu dành cho người Việt. Phiên bản 2.0 thay trải nghiệm mô phỏng game bằng lộ trình học theo tình huống: rõ, ngắn và dùng được ngay.
+MeowLearn is a focused English-learning studio built for Vietnamese speakers. Version 2.0 replaces the game-like learning experience with a practical, situation-based curriculum designed to be clear, concise, and immediately useful.
 
-## Nền tảng
+## Technology Stack
 
-- Next.js 16.3.4 (App Router + Turbopack)
+- Next.js 16.3.4 with the App Router and Turbopack
 - React 19.2
-- Clerk 7.9 cho xác thực
-- Drizzle ORM + Neon PostgreSQL
+- Clerk 7.9 for authentication
+- Drizzle ORM with Neon PostgreSQL
 - Tailwind CSS 3.4
 - Stripe Billing
-- React Admin cho CMS nội bộ
+- React Admin for the internal content management system
 
-Yêu cầu Node.js 20.9 trở lên.
+Node.js 20.9 or later is required.
 
-## Chạy dự án
+## Getting Started
+
+Install the dependencies and start the development server:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Các lệnh kiểm tra:
+Run the project checks:
 
 ```bash
 npm run lint
@@ -29,9 +31,9 @@ npm run typecheck
 npm run build
 ```
 
-## Biến môi trường
+## Environment Variables
 
-Dự án cần các biến sau trong `.env`:
+Create a `.env` file with the following variables:
 
 ```dotenv
 DATABASE_URL=
@@ -42,42 +44,57 @@ STRIPE_WEBHOOK_SECRET=
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-Không dùng Clerk development key hoặc Stripe test configuration cho production.
+Do not use Clerk development keys or Stripe test configuration in production.
 
-## Dữ liệu bài học
+## Learning Content
 
-Bộ dữ liệu nằm tại `scripts/seed-data.ts` và chỉ phục vụ một lộ trình:
+The curriculum source is stored in `scripts/seed-data.ts` and supports one focused learning path:
 
-- Tiếng Anh cho người Việt
-- 8 chương
-- 32 bài học
-- 128 câu hỏi
-- 384 phương án trả lời
+- English for Vietnamese speakers
+- 8 units
+- 32 lessons
+- 128 challenges
+- 384 answer options
 
-Chạy seed:
+Seed the development database with:
 
 ```bash
 npm run db:seed
 ```
 
-> Cảnh báo: seed hiện là thao tác dựng lại dữ liệu phát triển. Nó xóa khóa học, tiến độ và gói thuê bao hiện có trước khi tạo bộ nội dung mới. Không chạy trực tiếp trên production; hãy dùng migration có backup.
+> Warning: the seed command rebuilds the development dataset. It deletes existing courses, learning progress, and subscription records before creating the new curriculum. Do not run it directly against a production database. Use a backed-up migration process instead.
 
-## Cấu trúc chính
+## User Flow
 
-- `app/(marketing)` — landing page
-- `app/(main)` — studio, lộ trình, bài học, mục tiêu và kho hỗ trợ
-- `app/admin` — quản trị nội dung nội bộ
-- `actions` — Server Actions cho tiến độ và thanh toán
-- `db` — schema và truy vấn Drizzle
-- `scripts/seed-data.ts` — nguồn nội dung tiếng Anh kèm giải nghĩa tiếng Việt
-- `scripts/seed.ts` — trình dựng dữ liệu
+New learners can experience the product before creating an account:
 
-## Ghi chú nâng cấp 2.0
+1. Choose a learning goal.
+2. Complete a sample English challenge.
+3. Receive immediate feedback and an explanation.
+4. Review a recommended daily learning plan.
+5. Create an account to save progress.
+6. Continue from the daily lesson dashboard.
 
-- `middleware.ts` đã chuyển sang convention `proxy.ts` của Next.js 16.
-- Clerk `auth()`/`currentUser()` đã chuyển sang server API bất đồng bộ; `SignedIn`/`SignedOut` được thay bằng `Show`.
-- Dynamic route params và `headers()` đã chuyển sang Async Request APIs.
-- Stripe đã nâng sang API `2026-08-26.dahlia`; chu kỳ thuê bao đọc từ subscription item.
-- ESLint dùng flat config và chạy trực tiếp bằng CLI.
+## Project Structure
 
-Xem các việc còn cần hoàn thiện tại `ROADMAP.md`.
+- `app/(marketing)` — public landing page
+- `app/(marketing)/start` — pre-registration trial onboarding
+- `app/(main)` — learning studio, curriculum, lessons, goals, and support store
+- `app/admin` — internal content administration
+- `actions` — Server Actions for learning progress and billing
+- `db` — Drizzle schema and database queries
+- `scripts/seed-data.ts` — English curriculum with Vietnamese explanations
+- `scripts/seed.ts` — development dataset builder
+
+## Version 2.0 Upgrade Notes
+
+- Migrated `middleware.ts` to the Next.js 16 `proxy.ts` convention.
+- Migrated Clerk `auth()` and `currentUser()` to asynchronous server APIs.
+- Replaced Clerk `SignedIn` and `SignedOut` components with `Show`.
+- Migrated dynamic route parameters and `headers()` to Async Request APIs.
+- Upgraded Stripe to API version `2026-08-26.dahlia`; subscription periods are read from subscription items.
+- Migrated ESLint to flat configuration and the standalone ESLint CLI.
+- Restricted the product, curriculum, and administration flow to English learning for Vietnamese speakers.
+- Replaced the original language-selection flow with a trial-first onboarding experience.
+
+See `ROADMAP.md` for planned improvements and production-readiness work.

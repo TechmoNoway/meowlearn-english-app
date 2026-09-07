@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ClerkLoaded, ClerkLoading, Show, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { ClerkLoaded, ClerkLoading, Show, SignInButton } from "@clerk/nextjs";
 import { ArrowRight, BookOpenText, Check, Headphones, Languages, LoaderCircle, MessageSquareText, Sparkles } from "lucide-react";
 import Link from "next/link";
 
@@ -27,7 +27,7 @@ export default function Home() {
             <ClerkLoading><LoaderCircle className="h-6 w-6 animate-spin text-[#ff6b4a]" /></ClerkLoading>
             <ClerkLoaded>
               <Show when="signed-out">
-                <SignUpButton mode="modal" fallbackRedirectUrl="/learn"><Button size="lg" variant="secondary" className="group">Bắt đầu học miễn phí <ArrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" /></Button></SignUpButton>
+                <Button size="lg" variant="secondary" className="group" asChild><Link href="/start">Học thử ngay 2 phút <ArrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" /></Link></Button>
                 <SignInButton mode="modal" fallbackRedirectUrl="/learn"><Button size="lg">Tôi đã có tài khoản</Button></SignInButton>
               </Show>
               <Show when="signed-in"><Button size="lg" variant="secondary" asChild><Link href="/learn">Tiếp tục lộ trình <ArrowRight className="ml-2 h-4 w-4" /></Link></Button></Show>

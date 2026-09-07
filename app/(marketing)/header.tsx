@@ -9,9 +9,9 @@ export const Header = () => (
     <div className="mx-auto flex h-[76px] max-w-6xl items-center justify-between">
       <Link href="/" aria-label="Trang chủ MeowLearn"><BrandMark /></Link>
       <nav className="hidden items-center gap-7 text-sm font-bold text-[#607386] md:flex">
-        <a href="#phuong-phap" className="hover:text-[#18344f]">Phương pháp</a>
-        <a href="#lo-trinh" className="hover:text-[#18344f]">Lộ trình</a>
-        <a href="#bai-hoc" className="hover:text-[#18344f]">Bài học mẫu</a>
+        <Link href="/#phuong-phap" className="hover:text-[#18344f]">Phương pháp</Link>
+        <Link href="/#lo-trinh" className="hover:text-[#18344f]">Lộ trình</Link>
+        <Link href="/#bai-hoc" className="hover:text-[#18344f]">Bài học mẫu</Link>
       </nav>
       <ClerkLoading><LoaderCircle className="h-5 w-5 animate-spin text-[#2f9d92]" /></ClerkLoading>
       <ClerkLoaded>
