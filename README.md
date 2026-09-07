@@ -1,6 +1,6 @@
-# MeowLearn 2.0
+# MeowLearn English App 2.0
 
-MeowLearn is a focused English-learning studio built for Vietnamese speakers. Version 2.0 replaces the game-like learning experience with a practical, situation-based curriculum designed to be clear, concise, and immediately useful.
+MeowLearn English App is a focused English-learning studio built for Vietnamese speakers. Version 2.0 replaces the game-like learning experience with a practical, situation-based curriculum designed to be clear, concise, and immediately useful.
 
 ## Technology Stack
 

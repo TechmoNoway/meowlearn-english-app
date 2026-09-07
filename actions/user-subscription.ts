@@ -3,6 +3,7 @@
 import { getUserSubscription } from "@/db/queries";
 import { stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils";
+import { PRODUCT_NAME } from "@/lib/brand";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
 const returnUrl = absoluteUrl("/shop");
@@ -36,7 +37,7 @@ export const createStripeUrl = async () => {
         price_data: {
           currency: "USD",
           product_data: {
-            name: "MeowLearn Studio",
+            name: PRODUCT_NAME,
             description: "Năng lượng học không giới hạn",
           },
           unit_amount: 2000,

@@ -21,7 +21,7 @@ export default function Home() {
             Nói điều bạn <span className="relative text-[#ff6b4a]">thật sự<span className="absolute -bottom-1 left-1 h-2 w-[92%] -rotate-1 rounded-full bg-[#f5c451]/80" /></span> muốn nói.
           </h1>
           <p className="mt-8 max-w-xl text-lg leading-8 text-[#596f82]">
-            MeowLearn biến những tình huống hằng ngày thành buổi luyện tiếng Anh ngắn, rõ và dùng được ngay — thiết kế riêng cho người Việt.
+            MeowLearn English biến những tình huống hằng ngày thành buổi luyện tiếng Anh ngắn, rõ và dùng được ngay — thiết kế riêng cho người Việt.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <ClerkLoading><LoaderCircle className="h-6 w-6 animate-spin text-[#ff6b4a]" /></ClerkLoading>
