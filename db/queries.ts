@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { ENGLISH_COURSE_ID } from "@/constants";
 import db from "@/db/drizzle";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
@@ -23,6 +24,10 @@ export const getUserProgress = cache(async () => {
       activeCourse: true,
     },
   });
+
+  if (data && data.activeCourseId !== ENGLISH_COURSE_ID) {
+    return { ...data, activeCourseId: null, activeCourse: null };
+  }
 
   return data;
 });
@@ -85,12 +90,18 @@ export const getUnits = cache(async () => {
 });
 
 export const getCourses = cache(async () => {
-  const data = await db.query.courses.findMany();
+  const data = await db.query.courses.findMany({
+    where: eq(courses.id, ENGLISH_COURSE_ID),
+  });
 
   return data;
 });
 
 export const getCourseById = cache(async (courseId: number) => {
+  if (courseId !== ENGLISH_COURSE_ID) {
+    return null;
+  }
+
   const data = await db.query.courses.findFirst({
     where: eq(courses.id, courseId),
     with: {
@@ -174,6 +185,7 @@ export const getLesson = cache(async (id?: number) => {
   const data = await db.query.lessons.findFirst({
     where: eq(lessons.id, lessonId),
     with: {
+      unit: true,
       challenges: {
         orderBy: (challenges, { asc }) => [asc(challenges.order)],
         with: {
@@ -186,7 +198,11 @@ export const getLesson = cache(async (id?: number) => {
     },
   });
 
-  if (!data || !data.challenges) {
+  if (
+    !data ||
+    !data.challenges ||
+    data.unit.courseId !== ENGLISH_COURSE_ID
+  ) {
     return null;
   }
 
@@ -265,6 +281,7 @@ export const getTopTenUsers = cache(async () => {
   }
 
   const data = await db.query.userProgress.findMany({
+    where: eq(userProgress.activeCourseId, ENGLISH_COURSE_ID),
     orderBy: (userProgress, { desc }) => [desc(userProgress.points)],
     limit: 10,
     columns: {

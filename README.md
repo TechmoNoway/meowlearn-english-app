@@ -1,6 +1,6 @@
 # MeowLearn 2.0
 
-MeowLearn là studio học chuyên sâu cho cặp ngôn ngữ Anh–Việt. Phiên bản 2.0 thay trải nghiệm mô phỏng game bằng lộ trình học theo tình huống: rõ, ngắn và dùng được ngay.
+MeowLearn là studio học tiếng Anh chuyên sâu dành cho người Việt. Phiên bản 2.0 thay trải nghiệm mô phỏng game bằng lộ trình học theo tình huống: rõ, ngắn và dùng được ngay.
 
 ## Nền tảng
 
@@ -46,14 +46,13 @@ Không dùng Clerk development key hoặc Stripe test configuration cho producti
 
 ## Dữ liệu bài học
 
-Bộ dữ liệu nằm tại `scripts/seed-data.ts` và được sinh theo hai chiều:
+Bộ dữ liệu nằm tại `scripts/seed-data.ts` và chỉ phục vụ một lộ trình:
 
 - Tiếng Anh cho người Việt
-- Tiếng Việt cho người nói tiếng Anh
-- 16 chương (8 chủ đề cho mỗi hướng)
-- 64 bài học
-- 256 câu hỏi
-- 768 phương án trả lời
+- 8 chương
+- 32 bài học
+- 128 câu hỏi
+- 384 phương án trả lời
 
 Chạy seed:
 
@@ -70,7 +69,7 @@ npm run db:seed
 - `app/admin` — quản trị nội dung nội bộ
 - `actions` — Server Actions cho tiến độ và thanh toán
 - `db` — schema và truy vấn Drizzle
-- `scripts/seed-data.ts` — nguồn nội dung song ngữ
+- `scripts/seed-data.ts` — nguồn nội dung tiếng Anh kèm giải nghĩa tiếng Việt
 - `scripts/seed.ts` — trình dựng dữ liệu
 
 ## Ghi chú nâng cấp 2.0

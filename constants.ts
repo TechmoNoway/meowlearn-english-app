@@ -1,4 +1,5 @@
 export const POINTS_TO_REFILL = 10;
+export const ENGLISH_COURSE_ID = 1;
 
 export const quests = [
   {

@@ -1,4 +1,5 @@
 import db from "@/db/drizzle";
+import { ENGLISH_COURSE_ID } from "@/constants";
 import { courses } from "@/db/schema";
 import { isAdmin } from "@/lib/admin";
 import { eq } from "drizzle-orm";
@@ -13,6 +14,10 @@ export const GET = async (
     return new NextResponse("Unauthorized", { status: 403 });
   }
 
+  if (courseId !== ENGLISH_COURSE_ID) {
+    return new NextResponse("Course not found", { status: 404 });
+  }
+
   const data = await db.query.courses.findFirst({
     where: eq(courses.id, courseId),
   });
@@ -21,7 +26,7 @@ export const GET = async (
 };
 
 export const PUT = async (
-  req: Request,
+  _req: Request,
   { params }: { params: Promise<{ courseId: string }> }
 ) => {
   const courseId = Number((await params).courseId);
@@ -29,20 +34,17 @@ export const PUT = async (
     return new NextResponse("Unauthorized", { status: 403 });
   }
 
-  const body = await req.json();
-  const data = await db
-    .update(courses)
-    .set({
-      ...body,
-    })
-    .where(eq(courses.id, courseId))
-    .returning();
+  if (courseId !== ENGLISH_COURSE_ID) {
+    return new NextResponse("Course not found", { status: 404 });
+  }
 
-  return NextResponse.json(data[0]);
+  return new NextResponse("The English course is managed by source data", {
+    status: 405,
+  });
 };
 
 export const DELETE = async (
-  req: Request,
+  _req: Request,
   { params }: { params: Promise<{ courseId: string }> }
 ) => {
   const courseId = Number((await params).courseId);
@@ -50,10 +52,11 @@ export const DELETE = async (
     return new NextResponse("Unauthorized", { status: 403 });
   }
 
-  const data = await db
-    .delete(courses)
-    .where(eq(courses.id, courseId))
-    .returning();
+  if (courseId !== ENGLISH_COURSE_ID) {
+    return new NextResponse("Course not found", { status: 404 });
+  }
 
-  return NextResponse.json(data[0]);
+  return new NextResponse("The English course cannot be deleted", {
+    status: 405,
+  });
 };

@@ -11,7 +11,6 @@ const db = drizzle(sql, { schema });
 
 const coursesData: (typeof schema.courses.$inferInsert)[] = [
   { id: 1, title: "Tiếng Anh cho người Việt", imageSrc: "/uk.svg" },
-  { id: 2, title: "Tiếng Việt cho người nói tiếng Anh", imageSrc: "/vi.svg" },
 ];
 
 const unitsData: (typeof schema.units.$inferInsert)[] = [];
@@ -22,33 +21,32 @@ const optionsData: (typeof schema.challengeOptions.$inferInsert)[] = [];
 let challengeId = 1;
 let optionId = 1;
 
-coursesData.forEach((course, courseIndex) => {
-  const reverse = courseIndex === 1;
+coursesData.forEach((course) => {
   curriculum.forEach((unit, unitIndex) => {
-    const unitId = courseIndex * 100 + unitIndex + 1;
+    const unitId = unitIndex + 1;
     unitsData.push({
       id: unitId,
       courseId: course.id!,
       order: unitIndex + 1,
-      title: reverse ? unit.titleEn : unit.titleVi,
-      description: reverse ? unit.descriptionEn : unit.descriptionVi,
+      title: unit.titleVi,
+      description: unit.descriptionVi,
     });
 
     unit.lessons.forEach((lesson, lessonIndex) => {
-      const lessonId = courseIndex * 1000 + unitIndex * 10 + lessonIndex + 1;
+      const lessonId = unitIndex * 10 + lessonIndex + 1;
       lessonsData.push({
         id: lessonId,
         unitId,
         order: lessonIndex + 1,
-        title: reverse ? lesson.titleEn : lesson.titleVi,
+        title: lesson.titleVi,
       });
 
       lesson.phrases.forEach((phrase, phraseIndex) => {
         const currentChallengeId = challengeId++;
-        const correctText = reverse ? phrase.vi : phrase.en;
+        const correctText = phrase.en;
         const otherAnswers = lesson.phrases
           .filter((_, index) => index !== phraseIndex)
-          .map((item) => (reverse ? item.vi : item.en));
+          .map((item) => item.en);
         const choices = [correctText, otherAnswers[0], otherAnswers[1]];
         const offset = phraseIndex % choices.length;
         const rotatedChoices = [...choices.slice(offset), ...choices.slice(0, offset)];
@@ -58,9 +56,7 @@ coursesData.forEach((course, courseIndex) => {
           lessonId,
           order: phraseIndex + 1,
           type: phraseIndex % 2 === 0 ? "SELECT" : "ASSIST",
-          question: reverse
-            ? `“${phrase.en}” có nghĩa là gì?`
-            : `Cách nói tự nhiên nhất cho “${phrase.vi}” là gì?`,
+          question: `Cách nói tự nhiên nhất cho “${phrase.vi}” là gì?`,
         });
 
         rotatedChoices.forEach((text) => {
@@ -77,7 +73,7 @@ coursesData.forEach((course, courseIndex) => {
 });
 
 const main = async () => {
-  console.log("Rebuilding the bilingual curriculum...");
+  console.log("Rebuilding the English curriculum for Vietnamese learners...");
 
   await db.delete(schema.challengeProgress);
   await db.delete(schema.challengeOptions);

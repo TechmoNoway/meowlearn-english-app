@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/db/drizzle";
+import { ENGLISH_COURSE_ID } from "@/constants";
 import { getUserProgress, getUserSubscription } from "@/db/queries";
 import {
   challengeProgress,
@@ -29,9 +30,10 @@ export const upsertChallengeProgress = async (
 
   const challenge = await db.query.challenges.findFirst({
     where: eq(challenges.id, challengeId),
+    with: { lesson: { with: { unit: true } } },
   });
 
-  if (!challenge) {
+  if (!challenge || challenge.lesson.unit.courseId !== ENGLISH_COURSE_ID) {
     throw new Error("Challenge not found");
   }
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { POINTS_TO_REFILL } from "@/constants";
+import { ENGLISH_COURSE_ID, POINTS_TO_REFILL } from "@/constants";
 import db from "@/db/drizzle";
 import {
   getCourseById,
@@ -23,6 +23,10 @@ export const upsertUserProgress = async (courseId: number) => {
 
   if (!userId || !user) {
     throw new Error("Unauthorized");
+  }
+
+  if (courseId !== ENGLISH_COURSE_ID) {
+    throw new Error("Only the English course is available");
   }
 
   const course = await getCourseById(courseId);
@@ -76,9 +80,10 @@ export const reduceHearts = async (challengeId: number) => {
 
   const challenge = await db.query.challenges.findFirst({
     where: eq(challenges.id, challengeId),
+    with: { lesson: { with: { unit: true } } },
   });
 
-  if (!challenge) {
+  if (!challenge || challenge.lesson.unit.courseId !== ENGLISH_COURSE_ID) {
     throw new Error("Challenges not found");
   }
 

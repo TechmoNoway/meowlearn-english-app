@@ -12,7 +12,7 @@
 
 1. **Phát âm và ghi âm** — thu âm câu trả lời, speech-to-text, chấm độ rõ và chỉ ra âm người Việt thường nhầm.
 2. **Ôn tập ngắt quãng** — tạo hàng đợi ôn dựa trên câu sai, độ khó và thời điểm học gần nhất thay vì chỉ cộng điểm tổng.
-3. **Giải thích sau đáp án** — thêm trường `explanation`, phiên âm, ví dụ thay thế và ghi chú sắc thái Anh–Việt vào schema.
+3. **Giải thích sau đáp án** — thêm trường `explanation`, phiên âm, ví dụ thay thế và ghi chú sắc thái tiếng Anh dành cho người Việt vào schema.
 4. **Loại bài tập mới** — sắp xếp câu, điền từ, nghe chép chính tả, hội thoại phân nhánh và trả lời tự do.
 5. **Đánh giá đầu vào** — bài placement test ngắn để mở lộ trình phù hợp thay vì mọi người bắt đầu từ bài đầu.
 

@@ -13,5 +13,5 @@ export const List = ({ courses, activeCourseId }: Props) => {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const onClick = (id: number) => { if (pending) return; if (id === activeCourseId) return router.push("/learn"); startTransition(() => { upsertUserProgress(id).catch(() => toast.error("Không thể đổi lộ trình. Vui lòng thử lại.")); }); };
-  return <div className="grid gap-5 md:grid-cols-2">{courses.map((course,index) => <Card key={course.id} id={course.id || index + 1} title={course.title} onClick={onClick} disabled={pending} active={course.id === activeCourseId} index={index}/>)}</div>;
+  return <div className="max-w-xl">{courses.map((course,index) => <Card key={course.id} id={course.id || index + 1} title={course.title} onClick={onClick} disabled={pending} active={course.id === activeCourseId}/>)}</div>;
 };

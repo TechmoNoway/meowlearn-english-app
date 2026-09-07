@@ -9,7 +9,7 @@ type Props = { className?: string };
 
 export const navItems = [
   { label: "Studio", caption: "Lộ trình của bạn", href: "/learn", icon: "learn" },
-  { label: "Khám phá", caption: "Chọn hướng học", href: "/courses", icon: "explore" },
+  { label: "Chương trình", caption: "Tiếng Anh thực tế", href: "/courses", icon: "explore" },
   { label: "Tiến độ", caption: "Nhịp học cộng đồng", href: "/leaderboard", icon: "progress" },
   { label: "Mục tiêu", caption: "Cột mốc cá nhân", href: "/quests", icon: "goals" },
   { label: "Kho hỗ trợ", caption: "Năng lượng & gói học", href: "/shop", icon: "shop" },
@@ -20,8 +20,8 @@ export const Sidebar = ({ className }: Props) => (
     <Link href="/" className="mb-9 px-2"><BrandMark inverted /></Link>
     <div className="mb-5 rounded-[1.4rem] border border-white/10 bg-white/[.06] p-4">
       <p className="text-[10px] font-black uppercase tracking-[.18em] text-[#8edbd2]">Không gian học</p>
-      <p className="mt-2 text-lg font-black leading-tight">English ↔ Tiếng Việt</p>
-      <p className="mt-2 text-xs leading-5 text-white/45">Một cặp ngôn ngữ, học đến nơi.</p>
+      <p className="mt-2 text-lg font-black leading-tight">Học tiếng Anh</p>
+      <p className="mt-2 text-xs leading-5 text-white/45">Dành riêng cho người Việt.</p>
     </div>
     <nav className="flex flex-1 flex-col gap-1.5">{navItems.map((item) => <SidebarItem key={item.href} {...item} />)}</nav>
     <div className="flex items-center gap-3 border-t border-white/10 px-2 pt-5">
